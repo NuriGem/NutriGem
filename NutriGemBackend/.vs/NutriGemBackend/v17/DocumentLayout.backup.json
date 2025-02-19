@@ -1,0 +1,75 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\youss\\source\\repos\\NutriGemBackend\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{B498DE3B-1272-489A-A74B-FF8431A870FD}|NutriGemBackend\\NutriGemBackend.csproj|c:\\users\\youss\\source\\repos\\nutrigembackend\\nutrigembackend\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B498DE3B-1272-489A-A74B-FF8431A870FD}|NutriGemBackend\\NutriGemBackend.csproj|solutionrelative:nutrigembackend\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B498DE3B-1272-489A-A74B-FF8431A870FD}|NutriGemBackend\\NutriGemBackend.csproj|c:\\users\\youss\\source\\repos\\nutrigembackend\\nutrigembackend\\dietplanservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B498DE3B-1272-489A-A74B-FF8431A870FD}|NutriGemBackend\\NutriGemBackend.csproj|solutionrelative:nutrigembackend\\dietplanservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B498DE3B-1272-489A-A74B-FF8431A870FD}|NutriGemBackend\\NutriGemBackend.csproj|c:\\users\\youss\\source\\repos\\nutrigembackend\\nutrigembackend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B498DE3B-1272-489A-A74B-FF8431A870FD}|NutriGemBackend\\NutriGemBackend.csproj|solutionrelative:nutrigembackend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "UserService.cs",
+              "DocumentMoniker": "C:\\Users\\youss\\source\\repos\\NutriGemBackend\\NutriGemBackend\\UserService.cs",
+              "RelativeDocumentMoniker": "NutriGemBackend\\UserService.cs",
+              "ToolTip": "C:\\Users\\youss\\source\\repos\\NutriGemBackend\\NutriGemBackend\\UserService.cs",
+              "RelativeToolTip": "NutriGemBackend\\UserService.cs",
+              "ViewState": "AgIAAHMBAAAAAAAAAAAWwHoBAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-13T15:05:11.649Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "DietPlanService.cs",
+              "DocumentMoniker": "C:\\Users\\youss\\source\\repos\\NutriGemBackend\\NutriGemBackend\\DietPlanService.cs",
+              "RelativeDocumentMoniker": "NutriGemBackend\\DietPlanService.cs",
+              "ToolTip": "C:\\Users\\youss\\source\\repos\\NutriGemBackend\\NutriGemBackend\\DietPlanService.cs",
+              "RelativeToolTip": "NutriGemBackend\\DietPlanService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4BAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-13T15:16:15.227Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\youss\\source\\repos\\NutriGemBackend\\NutriGemBackend\\Program.cs",
+              "RelativeDocumentMoniker": "NutriGemBackend\\Program.cs",
+              "ToolTip": "C:\\Users\\youss\\source\\repos\\NutriGemBackend\\NutriGemBackend\\Program.cs",
+              "RelativeToolTip": "NutriGemBackend\\Program.cs",
+              "ViewState": "AgIAAAoAAAAAAAAAAAAQwGkBAAAlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-13T14:57:11.426Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

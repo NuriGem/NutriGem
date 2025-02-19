@@ -1,0 +1,177 @@
+-- Drop Database if it already exists (ONLY if you want to reset everything)
+-- DROP DATABASE NutriGem;
+
+-- Create the NutriGem Database
+CREATE DATABASE NutriGem;
+GO
+
+-- Use the NutriGem Database
+USE NutriGem;
+GO
+
+-- ✅ Users Table (With Admin Roles)
+CREATE TABLE Users (
+    UserID INT PRIMARY KEY IDENTITY(1,1),
+    FullName NVARCHAR(100) NOT NULL,
+    Email NVARCHAR(100) UNIQUE NOT NULL,
+    PasswordHash NVARCHAR(255) NOT NULL,
+    Age INT,
+    Height DECIMAL(5,2),
+    Weight DECIMAL(5,2),
+    HealthConditions NVARCHAR(255),
+    UserRole NVARCHAR(50) DEFAULT 'User', -- User or Admin
+    CreatedAt DATETIME DEFAULT GETDATE()
+);
+GO
+
+-- ✅ Diet Plans Table
+CREATE TABLE DietPlans (
+    PlanID INT PRIMARY KEY IDENTITY(1,1),
+    UserID INT FOREIGN KEY REFERENCES Users(UserID) ON DELETE CASCADE,
+    PlanType NVARCHAR(50) NOT NULL, -- Example: Weight Loss, Muscle Gain
+    CaloriesPerDay INT NOT NULL,
+    ProteinsPerDay DECIMAL(5,2),
+    CarbsPerDay DECIMAL(5,2),
+    FatsPerDay DECIMAL(5,2),
+    CreatedAt DATETIME DEFAULT GETDATE()
+);
+GO
+
+-- ✅ Activity Logs Table
+CREATE TABLE ActivityLogs (
+    LogID INT PRIMARY KEY IDENTITY(1,1),
+    UserID INT FOREIGN KEY REFERENCES Users(UserID) ON DELETE CASCADE,
+    ActivityType NVARCHAR(50) NOT NULL, -- Example: Running, Gym, Yoga
+    DurationMinutes INT NOT NULL,
+    CaloriesBurned INT,
+    LogDate DATETIME DEFAULT GETDATE()
+);
+GO
+
+-- ✅ Meals Table (User Meal Logs)
+CREATE TABLE Meals (
+    MealID INT PRIMARY KEY IDENTITY(1,1),
+    UserID INT FOREIGN KEY REFERENCES Users(UserID) ON DELETE CASCADE,
+    MealType NVARCHAR(50) NOT NULL, -- Example: Breakfast, Lunch, Dinner
+    FoodItems NVARCHAR(255) NOT NULL,
+    Calories INT NOT NULL,
+    MealDate DATETIME DEFAULT GETDATE()
+);
+GO
+
+-- ✅ Water Intake Tracking Table 💧
+CREATE TABLE WaterIntake (
+    WaterID INT PRIMARY KEY IDENTITY(1,1),
+    UserID INT FOREIGN KEY REFERENCES Users(UserID) ON DELETE CASCADE,
+    WaterAmountML INT NOT NULL, -- Amount in Milliliters
+    LogDate DATETIME DEFAULT GETDATE()
+);
+GO
+
+-- ✅ Weight Tracking Table ⚖️
+CREATE TABLE WeightTracking (
+    WeightID INT PRIMARY KEY IDENTITY(1,1),
+    UserID INT FOREIGN KEY REFERENCES Users(UserID) ON DELETE CASCADE,
+    Weight DECIMAL(5,2) NOT NULL, -- Weight in KG
+    LogDate DATETIME DEFAULT GETDATE()
+);
+GO
+
+-- ✅ Reminders Table ⏰ (For Meals, Water, and Exercise)
+CREATE TABLE Reminders (
+    ReminderID INT PRIMARY KEY IDENTITY(1,1),
+    UserID INT FOREIGN KEY REFERENCES Users(UserID) ON DELETE CASCADE,
+    ReminderType NVARCHAR(50) NOT NULL, -- Meal, Water, Activity
+    ReminderTime TIME NOT NULL,
+    CreatedAt DATETIME DEFAULT GETDATE()
+);
+GO
+
+-- ✅ Food Database Table 🍎 (Predefined Food List)
+CREATE TABLE FoodDatabase (
+    FoodID INT PRIMARY KEY IDENTITY(1,1),
+    FoodName NVARCHAR(100) NOT NULL,
+    CaloriesPer100G INT NOT NULL,
+    ProteinsPer100G DECIMAL(5,2),
+    CarbsPer100G DECIMAL(5,2),
+    FatsPer100G DECIMAL(5,2)
+);
+GO
+
+-- ✅ Exercise Library Table 🏋️‍♂️ (Predefined Exercises)
+CREATE TABLE ExerciseLibrary (
+    ExerciseID INT PRIMARY KEY IDENTITY(1,1),
+    ExerciseName NVARCHAR(100) NOT NULL,
+    MuscleGroup NVARCHAR(100), -- E.g., Chest, Legs, Back
+    CaloriesBurnedPerHour INT
+);
+GO
+
+-- ✅ Meal Library Table 🍽️ (Predefined Meal Plans)
+CREATE TABLE MealLibrary (
+    MealID INT PRIMARY KEY IDENTITY(1,1),
+    MealName NVARCHAR(100) NOT NULL,
+    FoodItems NVARCHAR(255) NOT NULL,
+    Calories INT NOT NULL,
+    Proteins DECIMAL(5,2),
+    Carbs DECIMAL(5,2),
+    Fats DECIMAL(5,2)
+);
+GO
+
+-- ✅ Insert Sample Users (Regular & Admin)
+INSERT INTO Users (FullName, Email, PasswordHash, Age, Height, Weight, HealthConditions, UserRole)
+VALUES 
+('John Doe', 'john@example.com', 'hashed_password123', 30, 175.5, 80.0, 'None', 'User'),
+('Jane Smith', 'jane@example.com', 'hashed_password456', 28, 162.0, 65.0, 'Diabetes', 'Admin');
+GO
+
+-- ✅ Insert Sample Diet Plans
+INSERT INTO DietPlans (UserID, PlanType, CaloriesPerDay, ProteinsPerDay, CarbsPerDay, FatsPerDay)
+VALUES 
+(1, 'Weight Loss', 1800, 120, 200, 50),
+(2, 'Muscle Gain', 2500, 150, 300, 70);
+GO
+
+-- ✅ Insert Sample Exercises
+INSERT INTO ExerciseLibrary (ExerciseName, MuscleGroup, CaloriesBurnedPerHour)
+VALUES 
+('Running', 'Cardio', 600),
+('Bench Press', 'Chest', 350),
+('Squats', 'Legs', 400);
+GO
+
+-- ✅ Insert Sample Food Database
+INSERT INTO FoodDatabase (FoodName, CaloriesPer100G, ProteinsPer100G, CarbsPer100G, FatsPer100G)
+VALUES 
+('Chicken Breast', 165, 31, 0, 3.6),
+('Brown Rice', 110, 2.6, 23, 0.9),
+('Apple', 52, 0.3, 14, 0.2);
+GO
+
+-- ✅ Insert Sample Meal Library
+INSERT INTO MealLibrary (MealName, FoodItems, Calories, Proteins, Carbs, Fats)
+VALUES 
+('Breakfast Special', 'Oatmeal, Banana, Almonds', 350, 10, 50, 10),
+('Lunch Power Meal', 'Grilled Chicken, Brown Rice, Broccoli', 600, 40, 70, 15);
+GO
+
+-- ✅ Insert Sample Reminders
+INSERT INTO Reminders (UserID, ReminderType, ReminderTime)
+VALUES 
+(1, 'Water', '10:00:00'),
+(2, 'Meal', '12:30:00');
+GO
+
+-- ✅ Verify Everything
+SELECT * FROM Users;
+SELECT * FROM DietPlans;
+SELECT * FROM ActivityLogs;
+SELECT * FROM Meals;
+SELECT * FROM WaterIntake;
+SELECT * FROM WeightTracking;
+SELECT * FROM Reminders;
+SELECT * FROM FoodDatabase;
+SELECT * FROM ExerciseLibrary;
+SELECT * FROM MealLibrary;
+GO
