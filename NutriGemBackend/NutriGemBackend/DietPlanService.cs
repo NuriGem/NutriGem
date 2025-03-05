@@ -6,20 +6,12 @@ class DietPlanService
     private readonly string _connectionString = "Server=localhost;Database=NutriGem;Trusted_Connection=True;TrustServerCertificate=True;";
 
     // ✅ Add Diet Plan for User
-    public void AddDietPlan(int userId, string planType, int calories, decimal proteins, decimal carbs, decimal fats)
+    public void AddDietPlan(int userId, string planType, int mealId, int calories, decimal proteins, decimal carbs, decimal fats)
     {
-        if (userId <= 0)
+        if (userId <= 0 || mealId <= 0)
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("❌ Invalid user ID.");
-            Console.ResetColor();
-            return;
-        }
-
-        if (proteins > 9999 || carbs > 9999 || fats > 9999)
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("❌ Error: Values for Proteins, Carbs, or Fats are too high. Please enter a reasonable number.");
+            Console.WriteLine("❌ Invalid user ID or meal ID.");
             Console.ResetColor();
             return;
         }
@@ -30,13 +22,14 @@ class DietPlanService
             {
                 conn.Open();
                 string query = @"
-                    INSERT INTO DietPlans (UserID, PlanType, CaloriesPerDay, ProteinsPerDay, CarbsPerDay, FatsPerDay)
-                    VALUES (@UserID, @PlanType, @Calories, @Proteins, @Carbs, @Fats)";
+                INSERT INTO DietPlans (UserID, PlanType, MealID, CaloriesPerDay, ProteinsPerDay, CarbsPerDay, FatsPerDay)
+                VALUES (@UserID, @PlanType, @MealID, @Calories, @Proteins, @Carbs, @Fats)";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@UserID", userId);
                     cmd.Parameters.AddWithValue("@PlanType", planType);
+                    cmd.Parameters.AddWithValue("@MealID", mealId);
                     cmd.Parameters.AddWithValue("@Calories", calories);
                     cmd.Parameters.AddWithValue("@Proteins", proteins);
                     cmd.Parameters.AddWithValue("@Carbs", carbs);
@@ -46,7 +39,7 @@ class DietPlanService
                     if (rowsAffected > 0)
                     {
                         Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine("✅ Diet plan added successfully!");
+                        Console.WriteLine("✅ Diet plan added successfully with meal!");
                         Console.ResetColor();
                     }
                     else
@@ -66,6 +59,7 @@ class DietPlanService
         }
     }
 
+
     // ✅ View Diet Plan for a User
     public void ViewDietPlan(int userId)
     {
@@ -83,9 +77,11 @@ class DietPlanService
             {
                 conn.Open();
                 string query = @"
-                    SELECT PlanType, CaloriesPerDay, ProteinsPerDay, CarbsPerDay, FatsPerDay
-                    FROM DietPlans
-                    WHERE UserID = @UserID";
+                SELECT dp.PlanType, dp.CaloriesPerDay, dp.ProteinsPerDay, dp.CarbsPerDay, dp.FatsPerDay,
+                       ml.MealName, ml.FoodItems
+                FROM DietPlans dp
+                LEFT JOIN MealLibrary ml ON dp.MealID = ml.MealID
+                WHERE dp.UserID = @UserID";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
@@ -102,6 +98,8 @@ class DietPlanService
                             Console.WriteLine($"💪 Proteins: {reader["ProteinsPerDay"]}g");
                             Console.WriteLine($"🥖 Carbs: {reader["CarbsPerDay"]}g");
                             Console.WriteLine($"🧈 Fats: {reader["FatsPerDay"]}g");
+                            Console.WriteLine($"🍽️ Meal: {reader["MealName"]}");
+                            Console.WriteLine($"🥗 Food Items: {reader["FoodItems"]}");
                             Console.WriteLine("-----------------------------");
                         }
                     }
@@ -121,6 +119,7 @@ class DietPlanService
             }
         }
     }
+
 
     // ✅ Update Diet Plan
     public void UpdateDietPlan(int userId, int calories, decimal proteins, decimal carbs, decimal fats)

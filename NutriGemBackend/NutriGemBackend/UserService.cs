@@ -308,13 +308,14 @@ class UserService
             try
             {
                 conn.Open();
-                string query = "INSERT INTO WaterIntake (UserID, AmountML, IntakeDate) VALUES (@UserID, @AmountML, @IntakeDate)";
+                string query = "INSERT INTO WaterIntake (UserID, WaterAmountML, LogDate) VALUES (@UserID, @WaterAmountML, @LogDate)";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@UserID", userId);
-                    cmd.Parameters.AddWithValue("@AmountML", amountML);
-                    cmd.Parameters.AddWithValue("@IntakeDate", date);
+                    cmd.Parameters.AddWithValue("@WaterAmountML", amountML);
+                    cmd.Parameters.AddWithValue("@LogDate", date);
+
 
                     int rowsAffected = cmd.ExecuteNonQuery();
                     if (rowsAffected > 0)
@@ -348,7 +349,7 @@ class UserService
             try
             {
                 conn.Open();
-                string query = "SELECT IntakeDate, AmountML FROM WaterIntake WHERE UserID = @UserID ORDER BY IntakeDate DESC";
+                string query = "SELECT LogDate, WaterAmountML FROM WaterIntake WHERE UserID = @UserID ORDER BY LogDate DESC";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
@@ -358,7 +359,7 @@ class UserService
                     Console.WriteLine("\n💧 Water Intake History:");
                     while (reader.Read())
                     {
-                        Console.WriteLine($"📅 {reader["IntakeDate"]}: {reader["AmountML"]}ml");
+                        Console.WriteLine($"📅 {reader["LogDate"]}: {reader["WaterAmountML"]}ml");
                     }
                 }
             }
@@ -383,13 +384,14 @@ class UserService
             try
             {
                 conn.Open();
-                string query = "INSERT INTO WeightProgress (UserID, WeightKG, EntryDate) VALUES (@UserID, @WeightKG, @EntryDate)";
+                string query = "INSERT INTO WeightTracking (UserID, Weight, LogDate) VALUES (@UserID, @Weight, @LogDate)";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@UserID", userId);
-                    cmd.Parameters.AddWithValue("@WeightKG", weightKG);
-                    cmd.Parameters.AddWithValue("@EntryDate", date);
+                    cmd.Parameters.AddWithValue("@Weight", weightKG);
+                    cmd.Parameters.AddWithValue("@LogDate", date);
+
 
                     int rowsAffected = cmd.ExecuteNonQuery();
                     if (rowsAffected > 0)
@@ -423,7 +425,7 @@ class UserService
             try
             {
                 conn.Open();
-                string query = "SELECT EntryDate, WeightKG FROM WeightProgress WHERE UserID = @UserID ORDER BY EntryDate DESC";
+                string query = "SELECT LogDate, Weight FROM WeightTracking WHERE UserID = @UserID ORDER BY LogDate DESC";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
@@ -433,7 +435,7 @@ class UserService
                     Console.WriteLine("\n📊 Weight Progress History:");
                     while (reader.Read())
                     {
-                        Console.WriteLine($"📅 {reader["EntryDate"]}: {reader["WeightKG"]} kg");
+                        Console.WriteLine($"📅 {reader["LogDate"]}: {reader["Weight"]} kg");
                     }
                 }
             }
@@ -445,4 +447,192 @@ class UserService
             }
         }
     }
+
+    public void ViewUserHealthSummary(int userId)
+    {
+        using (SqlConnection conn = new SqlConnection(_connectionString))
+        {
+            conn.Open();
+            string query = @"
+            -- Get user's diet plan
+            SELECT dp.PlanType, ml.MealName, ml.FoodItems, dp.CaloriesPerDay, dp.ProteinsPerDay, dp.CarbsPerDay, dp.FatsPerDay
+            FROM DietPlans dp
+            LEFT JOIN MealLibrary ml ON dp.MealID = ml.MealID
+            WHERE dp.UserID = @UserID;
+
+            -- Get most recent water intake
+            SELECT TOP 1 WaterAmountML, LogDate
+            FROM WaterIntake 
+            WHERE UserID = @UserID 
+            ORDER BY LogDate DESC;
+
+            -- Get most recent weight entry
+            SELECT TOP 1 Weight, LogDate 
+            FROM WeightTracking 
+            WHERE UserID = @UserID 
+            ORDER BY LogDate DESC;
+        ";
+
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@UserID", userId);
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                Console.WriteLine("\n📊 Your Health Summary:");
+
+                // ✅ Display Diet Plan
+                if (reader.Read())
+                {
+                    Console.WriteLine("\n🍽️ Diet Plan:");
+                    Console.WriteLine($"🔥 Type: {reader["PlanType"]}");
+                    Console.WriteLine($"🍽️ Meal: {reader["MealName"]}");
+                    Console.WriteLine($"🥗 Food Items: {reader["FoodItems"]}");
+                    Console.WriteLine($"🔥 Calories: {reader["CaloriesPerDay"]} kcal");
+                    Console.WriteLine($"💪 Proteins: {reader["ProteinsPerDay"]} g");
+                    Console.WriteLine($"🥖 Carbs: {reader["CarbsPerDay"]} g");
+                    Console.WriteLine($"🧈 Fats: {reader["FatsPerDay"]} g");
+                }
+                else
+                {
+                    Console.WriteLine("❌ No diet plan found.");
+                }
+
+                // ✅ Display Most Recent Water Intake
+                if (reader.NextResult() && reader.Read())
+                {
+                    Console.WriteLine("\n💧 Most Recent Water Intake:");
+                    Console.WriteLine($"📅 Date: {reader["LogDate"]}");
+                    Console.WriteLine($"💦 Amount: {reader["WaterAmountML"]} ml");
+                }
+                else
+                {
+                    Console.WriteLine("❌ No water intake records found.");
+                }
+
+                // ✅ Display Most Recent Weight Entry
+                if (reader.NextResult() && reader.Read())
+                {
+                    Console.WriteLine("\n⚖️ Current Weight:");
+                    Console.WriteLine($"📅 Date: {reader["LogDate"]}");
+                    Console.WriteLine($"⚖️ Weight: {reader["Weight"]} kg");
+                }
+                else
+                {
+                    Console.WriteLine("❌ No weight records found.");
+                }
+            }
+        }
+    }
+    public void LogExercise(int userId, int exerciseId, int durationMinutes)
+    {
+        using (SqlConnection conn = new SqlConnection(_connectionString))
+        {
+            conn.Open();
+
+            // Get exercise details
+            string getExerciseQuery = "SELECT CaloriesBurnedPerHour FROM ExerciseLibrary WHERE ExerciseID = @ExerciseID";
+
+            using (SqlCommand cmd = new SqlCommand(getExerciseQuery, conn))
+            {
+                cmd.Parameters.AddWithValue("@ExerciseID", exerciseId);
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    int caloriesPerHour = (int)reader["CaloriesBurnedPerHour"];
+                    reader.Close();
+
+                    // Calculate calories burned based on duration
+                    int caloriesBurned = (caloriesPerHour * durationMinutes) / 60;
+
+                    // Insert into ExerciseLogs
+                    string insertQuery = "INSERT INTO ExerciseLogs (UserID, ExerciseID, DurationMinutes, CaloriesBurned, LogDate) VALUES (@UserID, @ExerciseID, @Duration, @Calories, GETDATE())";
+
+                    using (SqlCommand insertCmd = new SqlCommand(insertQuery, conn))
+                    {
+                        insertCmd.Parameters.AddWithValue("@UserID", userId);
+                        insertCmd.Parameters.AddWithValue("@ExerciseID", exerciseId);
+                        insertCmd.Parameters.AddWithValue("@Duration", durationMinutes);
+                        insertCmd.Parameters.AddWithValue("@Calories", caloriesBurned);
+
+                        insertCmd.ExecuteNonQuery();
+                    }
+
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine($"✅ Exercise logged! Duration: {durationMinutes} mins, Calories Burned: {caloriesBurned} kcal.");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("❌ Invalid exercise selection.");
+                    Console.ResetColor();
+                }
+            }
+        }
+    }
+
+    public void ViewExerciseCaloriesBurned(int userId)
+    {
+        using (SqlConnection conn = new SqlConnection(_connectionString))
+        {
+            conn.Open();
+            string query = @"
+            -- Get total calories burned from exercises today
+            SELECT SUM(el.CaloriesBurned) AS TotalCaloriesBurned
+            FROM ExerciseLogs el
+            WHERE el.UserID = @UserID AND CAST(el.LogDate AS DATE) = CAST(GETDATE() AS DATE);
+
+            -- Get detailed breakdown of exercises performed today
+            SELECT el.LogDate, ex.ExerciseName, el.DurationMinutes, el.CaloriesBurned
+            FROM ExerciseLogs el
+            INNER JOIN ExerciseLibrary ex ON el.ExerciseID = ex.ExerciseID
+            WHERE el.UserID = @UserID AND CAST(el.LogDate AS DATE) = CAST(GETDATE() AS DATE)
+            ORDER BY el.LogDate DESC;
+        ";
+
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@UserID", userId);
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                Console.WriteLine("\n🔥 Today's Exercise Summary:");
+
+                // ✅ Display Total Calories Burned
+                if (reader.Read())
+                {
+                    int totalCalories = reader["TotalCaloriesBurned"] != DBNull.Value ? (int)reader["TotalCaloriesBurned"] : 0;
+                    Console.WriteLine($"🔥 Total Calories Burned: {totalCalories} kcal");
+                }
+
+                // ✅ Display Breakdown of Exercises
+                if (reader.NextResult())
+                {
+                    Console.WriteLine("\n📋 Exercise Breakdown:");
+                    bool hasExercises = false;
+                    while (reader.Read())
+                    {
+                        hasExercises = true;
+                        Console.WriteLine($"📅 {reader["LogDate"]}: {reader["ExerciseName"]} - {reader["DurationMinutes"]} mins, {reader["CaloriesBurned"]} kcal");
+                    }
+
+                    if (!hasExercises)
+                    {
+                        Console.WriteLine("❌ No exercises logged today.");
+                    }
+                }
+            }
+        }
+    }
+
+
+
+
+
+    public string GetConnectionString()
+    {
+        return _connectionString;
+    }
+
 }
+
