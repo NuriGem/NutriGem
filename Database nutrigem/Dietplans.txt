@@ -1,0 +1,11 @@
+CREATE TABLE DietPlans (
+    PlanID INT,
+    UserID INT,
+    PlanType VARCHAR(50),
+    CaloriesPerDay INT,
+    ProteinsPerDay DECIMAL(10, 2),
+    CarbsPerDay DECIMAL(10, 2),
+    FatsPerDay DECIMAL(10, 2),
+    CreatedAt DATETIME,
+    MealID INT
+);

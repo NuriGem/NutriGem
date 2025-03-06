@@ -1,0 +1,8 @@
+CREATE TABLE ExerciseLogs (
+    LogID INT,
+    UserID INT,
+    ExerciseID INT,
+    DurationMinutes INT,
+    CaloriesBurned INT,
+    LogDate DATETIME
+);

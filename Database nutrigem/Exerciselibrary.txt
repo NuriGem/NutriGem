@@ -1,0 +1,30 @@
+CREATE TABLE ExerciseLibrary (
+    ExerciseID INT,
+    ExerciseName VARCHAR(100),
+    MuscleGroup VARCHAR(50),
+    CaloriesBurnedPerHour INT
+);
+
+INSERT INTO ExerciseLibrary (ExerciseID, ExerciseName, MuscleGroup, CaloriesBurnedPerHour)
+VALUES 
+(1, 'Running', 'Cardio', 600),
+(2, 'Bench Press', 'Chest', 350),
+(3, 'Squats', 'Legs', 400),
+(4, 'Running', 'Cardio', 600),
+(5, 'Bench Press', 'Chest', 350),
+(6, 'Squats', 'Legs', 400),
+(7, 'Jump Rope', 'Cardio', 700),
+(8, 'Treadmill Running', 'Cardio', 600),
+(9, 'Cycling', 'Cardio', 550),
+(10, 'Rowing Machine', 'Cardio', 500),
+(11, 'Sprinting', 'Cardio', 650),
+(12, 'Bench Press', 'Chest', 350),
+(13, 'Push-Ups', 'Chest', 300),
+(14, 'Incline Dumbbell Press', 'Chest', 320),
+(15, 'Chest Flys', 'Chest', 280),
+(16, 'Dips', 'Chest', 330),
+(17, 'Squats', 'Legs', 400),
+(18, 'Lunges', 'Legs', 380),
+(19, 'Leg Press', 'Legs', 370),
+(20, 'Deadlifts', 'Legs', 450),
+(21, 'Calf Raises', 'Legs', 200);

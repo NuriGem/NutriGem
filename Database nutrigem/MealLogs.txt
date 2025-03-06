@@ -1,0 +1,6 @@
+CREATE TABLE MealLogs (
+    LogID INT PRIMARY KEY,
+    UserID INT,
+    MealID INT,
+    LogDate DATE
+);

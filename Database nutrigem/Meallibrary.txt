@@ -1,0 +1,35 @@
+CREATE TABLE Meallibrary (
+    MealID INT,
+    MealName VARCHAR(100),
+    FoodItems VARCHAR(255),
+    Calories INT,
+    Proteins DECIMAL(5, 2),
+    Carbs DECIMAL(5, 2),
+    Fats DECIMAL(5, 2),
+    Category VARCHAR(50)
+);
+
+INSERT INTO MealLibrary (MealID, MealName, FoodItems, Calories, Proteins, Carbs, Fats, Category)
+VALUES
+(1, 'Breakfast Special', 'Oatmeal, Banana, Almonds', 350, 10.00, 50.00, 10.00, 'Weight Loss'),
+(2, 'Lunch Power Meal', 'Grilled Chicken, Brown Rice, Broccoli', 600, 40.00, 70.00, 15.00, 'Weight Loss'),
+(3, 'Vegetable Stir Fry', 'Broccoli, Carrots, Bell Peppers, Tofu', 400, 20.00, 50.00, 10.00, 'Weight Loss'),
+(4, 'Grilled Salmon Salad', 'Salmon, Spinach, Avocado, Lemon Dressing', 450, 35.00, 20.00, 15.00, 'Weight Loss'),
+(5, 'Oatmeal Delight', 'Oats, Almond Milk, Chia Seeds, Blueberries', 300, 10.00, 40.00, 8.00, 'Weight Loss'),
+(6, 'Chicken Quinoa Bowl', 'Grilled Chicken, Quinoa, Steamed Broccoli', 380, 40.00, 55.00, 10.00, 'Weight Loss'),
+(7, 'Egg & Avocado Toast', 'Whole Wheat Bread, Avocado, Boiled Eggs', 500, 25.00, 40.00, 12.00, 'Weight Loss'),
+(8, 'Tofu & Brown Rice', 'Tofu, Brown Rice, Steamed Veggies', 420, 30.00, 55.00, 9.00, 'Weight Loss'),
+(9, 'Turkey & Sweet Potato', 'Lean Turkey, Sweet Potato, Green Beans', 450, 38.00, 50.00, 7.00, 'Weight Loss'),
+(10, 'Greek Yogurt & Nuts', 'Greek Yogurt, Almonds, Walnuts, Honey', 350, 25.00, 40.00, 12.00, 'Weight Loss'),
+(11, 'Zucchini Noodles', 'Zucchini, Tomato Sauce, Lean Ground Turkey', 400, 35.00, 30.00, 15.00, 'Weight Loss'),
+(12, 'Baked Cod & Veggies', 'Baked Cod, Asparagus, Brown Rice', 430, 37.00, 50.00, 9.00, 'Weight Loss'),
+(13, 'Steak & Brown Rice', 'Sirloin Steak, Brown Rice, Steamed Veggies', 750, 60.00, 80.00, 20.00, 'Muscle Gain'),
+(14, 'Chicken & Pasta', 'Grilled Chicken, Whole Wheat Pasta, Marinara Sauce', 750, 58.00, 92.00, 22.00, 'Muscle Gain'),
+(15, 'Protein Pancakes', 'Oats, Banana, Whey Protein, Peanut Butter', 650, 45.00, 75.00, 18.00, 'Muscle Gain'),
+(16, 'Egg & Avocado Toast', 'Whole Wheat Bread, Avocado, Scrambled Eggs', 600, 40.00, 70.00, 20.00, 'Muscle Gain'),
+(17, 'Tuna & Quinoa Bowl', 'Tuna, Quinoa, Kale, Olive Oil', 680, 55.00, 75.00, 22.00, 'Muscle Gain'),
+(18, 'Salmon & Sweet Potato', 'Grilled Salmon, Roasted Sweet Potato, Green Beans', 720, 50.00, 85.00, 18.00, 'Muscle Gain'),
+(19, 'Lean Beef Stir Fry', 'Lean Beef, Brown Rice, Bell Peppers, Carrots', 750, 58.00, 80.00, 15.00, 'Muscle Gain'),
+(20, 'Greek Yogurt & Granola', 'Greek Yogurt, Granola, Mixed Berries', 650, 45.00, 80.00, 14.00, 'Muscle Gain'),
+(21, 'Peanut Butter Smoothie', 'Banana, Peanut Butter, Whey Protein, Milk', 700, 50.00, 85.00, 22.00, 'Muscle Gain'),
+(22, 'Grilled Chicken Wrap', 'Grilled Chicken, Whole Wheat Wrap, Avocado, Lettuce, Tomato', 680, 55.00, 75.00, 18.00, 'Muscle Gain');
