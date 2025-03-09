@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard - NutriGem</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="shortcut icon" href="nutrigem.jpeg " type="image/x-icon">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+</head>
+<style>
+    body {
+    background: transparent;
+  }
+</style>
+<body>
+
+  <header>
+    <div class="nav-header">
+        <img src="nutrigem.png" alt="NutriGem" width="200">
+        <div class="menu-icon" onclick="toggleMenu()">☰</div>
+        <div class="nav-links" id="navLinks">
+            <a href="#">Home</a>
+            <a href="#">About</a>
+            <a href="#">Services</a>
+            <a href="#">Contact</a>
+            <a href="userDashboard.html"><i class="fas fa-user"></i></a>
+        </div>
+    </div>
+</header>
+
+
+    <div class="user-content">
+      <div class="user-view">
+        <button id="view-users">View All Users</button>
+        <button id="view-diet-plans">View All Diet Plans</button>
+        <button style="background-color: red;" id="logout">Logout</button>
+      </div>
+      <main>
+        <section id="content">
+          
+        </section>
+      </main>
+    </div>
+
+    
+
+  <script>
+    // Example placeholder interactions:
+    document.getElementById("view-users").addEventListener("click", () => {
+      document.getElementById("content").innerHTML = `
+        <h2>All Users</h2>
+        <p>List of users will appear here.</p>
+      `;
+    });
+
+    document.getElementById("view-diet-plans").addEventListener("click", () => {
+      document.getElementById("content").innerHTML = `
+        <h2>All Diet Plans</h2>
+        <p>List of diet plans will appear here.</p>
+      `;
+    });
+
+    document.getElementById("logout").addEventListener("click", () => {
+      window.location.href = "index.html";
+    });
+  </script>
+
+<footer class="footer">
+  <div class="footer-container">
+      <div class="footer-about">
+        <img src="nutrigem.png" alt="NutriGem" width="200">
+          <p>Your trusted partner in achieving a healthy lifestyle. At NutriGem, we provide expert guidance, personalized diet plans, and science-backed nutrition tips to help you reach your health goals. Join us on the journey to better well-being!</p>
+        </div>
+      <div class="footer-links">
+          <h4>Quick Links</h4>
+          <ul>
+              <li><a href="adminDashboard.html">Home</a></li>
+              <li><a href="#">About</a></li>
+              <li><a href="#">Services</a></li>
+              <li><a href="#">Contact</a></li>
+          </ul>
+      </div>
+      <div class="footer-social">
+          <h4>Follow Us</h4>
+          <a href="#"><i class="fab fa-facebook"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-linkedin"></i></a>
+      </div>
+  </div>
+  <p class="footer-credit">&copy; 2025 Nutrigem.com All Rights Reserved.</p>
+</footer>
+</body>
+</html>

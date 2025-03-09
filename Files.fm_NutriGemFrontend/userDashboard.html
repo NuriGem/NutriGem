@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>User Dashboard - NutriGem</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="shortcut icon" href="nutrigem.jpeg " type="image/x-icon">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<style>
+  body {
+    background: transparent;
+  }
+   
+</style>
+<body>
+  <header>
+    <div class="nav-header">
+        <img src="nutrigem.png" alt="NutriGem" width="200">
+        <div class="menu-icon" onclick="toggleMenu()">☰</div>
+        <div class="nav-links" id="navLinks">
+            <a href="#">Home</a>
+            <a href="#">About</a>
+            <a href="#">Services</a>
+            <a href="#">Contact</a>
+            <a href="userDashboard.html"><i class="fas fa-user"></i></a>
+        </div>
+    </div>
+</header>
+
+<div class="userdashboard">
+  <h1>Welcome, kindly select an option to manage your health.</h1>    
+</div>
+
+  <div class="user-content">
+    <div class="user-view">
+      <button id="view-diet-plan">View My Diet Plan</button>
+      <button id="log-water">Log Water Intake</button>
+      <button id="view-weight">View Weight Progress</button>
+      <button style="background-color: red;" id="logout">Logout</button>
+    </div>
+    <main>
+      <section id="content">
+        
+      </section>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-container">
+        <div class="footer-about">
+          <img src="nutrigem.png" alt="NutriGem" width="200">
+            <p>Your trusted partner in achieving a healthy lifestyle. At NutriGem, we provide expert guidance, personalized diet plans, and science-backed nutrition tips to help you reach your health goals. Join us on the journey to better well-being!</p>
+          </div>
+        <div class="footer-links">
+            <h4>Quick Links</h4>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Services</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </div>
+        <div class="footer-social">
+            <h4>Follow Us</h4>
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-linkedin"></i></a>
+        </div>
+    </div>
+    <p class="footer-credit">&copy; 2025 Nutrigem.com All Rights Reserved.</p>
+  </footer>
+  
+  <script>
+    // When "View My Diet Plan" is clicked:
+    document.getElementById("view-diet-plan").addEventListener("click", () => {
+      document.getElementById("content").innerHTML = `
+        <h2>My Diet Plan</h2>
+        <p>Your diet plan details will appear here.</p>
+      `;
+    });
+
+    // When "Log Water Intake" is clicked:
+    document.getElementById("log-water").addEventListener("click", () => {
+      document.getElementById("content").innerHTML = `
+        <h2>Log Water Intake</h2>
+        <form id="water-form">
+          <input type="number" id="water-amount" placeholder="Water amount in ml" required>
+          <button type="submit">Log Water</button>
+
+        </form>
+        <div id="water-result"></div>
+      `;
+      document.getElementById("water-form").addEventListener("submit", function(e) {
+        e.preventDefault();
+        const amount = document.getElementById("water-amount").value;
+        document.getElementById("water-result").innerText = "Water intake logged: " + amount + " ml.";
+      });
+    });
+
+    // When "View Weight Progress" is clicked:
+    document.getElementById("view-weight").addEventListener("click", () => {
+      document.getElementById("content").innerHTML = `
+        <h2>Weight Progress</h2>
+        <p>Your weight history will appear here.</p>
+      `;
+    });
+
+    // Logout:
+    document.getElementById("logout").addEventListener("click", () => {
+      window.location.href = "index.html";
+    });
+  </script>
+</body>
+</html>

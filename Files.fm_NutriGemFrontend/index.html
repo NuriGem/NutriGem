@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NutriGem Frontend</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="shortcut icon" href="nutrigem.jpeg " type="image/x-icon">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+</head>
+<body>
+  <header>
+    <div class="nav-header">
+        <img src="nutrigem.jpeg" alt="NutriGem" width="200">
+        <div class="menu-icon" id="menuIcon" onclick="toggleMenu()">☰</div>
+        <div class="nav-links" id="navLinks">
+            <a href="index.html">Home</a>
+            <a href="#">About</a>
+            <a href="#">Services</a>
+            <a href="#">Contact</a>
+            <a class="navlogin" href="#" onclick="openModal('loginModal')">Login</a>
+            <a class="navsignup" href="#" onclick="openModal('signupModal')">Sign Up</a>
+        </div>
+    </div>
+</header>
+
+<script>
+  function toggleMenu() {
+    var menu = document.getElementById("navLinks");
+    var icon = document.getElementById("menuIcon");
+
+    menu.classList.toggle("show");
+    if (menu.classList.contains("show")) {
+        icon.classList.add("active");
+        icon.innerHTML = "&#x2715;";
+    } else {
+        icon.classList.remove("active");
+        icon.innerHTML = "&#9776;";
+    }
+}
+
+
+</script>
+
+<div id="loginModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal('loginModal')">&times;</span>
+        <h2>Login to Nutrigem</h2>
+        <form id="login-form">
+          <input type="email" id="loginEmail" placeholder="Email" required>
+          <input type="password" id="loginPassword" placeholder="Password" required>
+          <button type="submit">Login</button>
+        </form>
+        <a class="navsignup" href="#" onclick="openModal('signupModal')">Sign Up</a>
+
+        <div id="login-result"></div>
+    </div>
+</div>
+
+<div id="signupModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal('signupModal')">&times;</span>
+        <h2>Sign Up for NutriGem</h2>
+      <form id="registration-form">
+        <input type="text" id="fullName" placeholder="Full Name" required>
+        <input type="email" id="regEmail" placeholder="Email" required>
+        <input type="password" id="regPassword" placeholder="Password (min 8 characters)" required>
+        <input type="number" id="age" placeholder="Age" required>
+        <input type="number" id="height" placeholder="Height (cm)" required>
+        <input type="number" id="weight" placeholder="Weight (kg)" required>
+        <input type="text" id="healthConditions" placeholder="Health Conditions">
+        <!-- Role Selection Dropdown -->
+         <p class="regsub">Regist as a</p>
+        <select id="userRole" required>
+          <option value="User" selected>User</option>
+          <option value="Admin">Admin</option>
+        </select>
+        <button type="submit">Register</button>
+      </form>
+      <div id="registration-result"></div>
+    </div>
+</div>
+
+<script>
+    function toggleMenu() {
+        document.getElementById("navLinks").classList.toggle("show");
+    }
+
+    function openModal(modalId) {
+        document.getElementById(modalId).style.display = "flex";
+    }
+
+    function closeModal(modalId) {
+        document.getElementById(modalId).style.display = "none";
+    }
+</script>
+
+<script>
+    function toggleMenu() {
+        document.getElementById("navLinks").classList.toggle("show");
+    }
+</script>
+<div class="content-box">
+  <div class="content-head">
+      <h1>Lose weight with NutriGem</h1>
+      <p>
+          If you're overweight, losing weight has many health benefits. It might help reduce the risk of developing health conditions such as high blood pressure, heart disease, and type 2 diabetes.  
+          Making small, simple changes to what and how much you are eating and drinking can really help you lose the pounds.
+      </p>
+      <button class="program-btn">View Our Programs</button>
+  </div>
+  <div class="content-img">
+      <img src="nutrigem-wl.png" alt="" height="300">
+  </div>
+</div>
+
+
+<section class="testimonial-section">
+  <h2>What Our Clients Say</h2>
+  <div class="testimonials-container">
+      <div class="testimonial">
+          <i class="fas fa-user-circle"></i> <!-- FontAwesome Icon -->
+          <p>"NutriGem changed my life! I've lost 10kg in 3 months and feel amazing!"</p>
+          <h4>- Sarah Johnson</h4>
+      </div>
+      <div class="testimonial">
+          <i class="fas fa-user-circle"></i>
+          <p>"Great program with easy-to-follow diet plans. Highly recommended!"</p>
+          <h4>- James Williams</h4>
+      </div>
+      <div class="testimonial">
+          <i class="fas fa-user-circle"></i>
+          <p>"I feel healthier and more energetic since joining NutriGem. It's incredible!"</p>
+          <h4>- Olivia Brown</h4>
+      </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-container">
+      <div class="footer-about">
+        <img src="nutrigem.png" alt="NutriGem" width="200">
+          <p>Your trusted partner in achieving a healthy lifestyle. At NutriGem, we provide expert guidance, personalized diet plans, and science-backed nutrition tips to help you reach your health goals. Join us on the journey to better well-being!</p>
+        </div>
+      <div class="footer-links">
+          <h4>Quick Links</h4>
+          <ul>
+              <li><a href="#">Home</a></li>
+              <li><a href="#">About</a></li>
+              <li><a href="#">Services</a></li>
+              <li><a href="#">Contact</a></li>
+          </ul>
+      </div>
+      <div class="footer-social">
+          <h4>Follow Us</h4>
+          <a href="#"><i class="fab fa-facebook"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-linkedin"></i></a>
+      </div>
+  </div>
+  <p class="footer-credit">&copy; 2025 Nutrigem.com All Rights Reserved.</p>
+</footer>
+
+
+  <script src="script.js"></script>
+</body>
+</html>
