@@ -1,16 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using Microsoft.Data.SqlClient;
+using BCrypt.Net;
 
-
-class Program
+public partial class Program
 {
     static void Main()
     {
         UserService userService = new UserService();
         DietPlanService dietPlanService = new DietPlanService();
 
-        while (true) // Keeps the program running until explicitly exited
+        while (true)
         {
             Console.Clear();
             Console.WriteLine("🔹 Welcome to NutriGem!");
@@ -33,11 +34,9 @@ class Program
                 case "2":
                     HandleRegistration(userService, dietPlanService, choice == "1" ? "User" : "Admin");
                     break;
-
                 case "3":
                     HandleLogin(userService, dietPlanService);
                     break;
-
                 default:
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("❌ Invalid choice. Please try again.");
@@ -105,6 +104,15 @@ class Program
 
         if (success)
         {
+            if (role == null)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("❌ Role not found for user.");
+                Console.ResetColor();
+                Thread.Sleep(1500);
+                return;
+            }
+
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine($"✅ Logged in as {role}!");
             Console.ResetColor();
@@ -124,6 +132,40 @@ class Program
         }
     }
 
+    private static decimal? GetUserBmi(UserService userService, int userId)
+    {
+        using (SqlConnection conn = new SqlConnection(userService.GetConnectionString()))
+        {
+            try
+            {
+                conn.Open();
+                Console.WriteLine($"DEBUG: Fetching BMI for UserID = {userId}");
+                string query = "SELECT BMI FROM Users WHERE UserID = @UserID";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@UserID", userId);
+                    object result = cmd.ExecuteScalar();
+                    if (result != null && result != DBNull.Value)
+                    {
+                        decimal bmi = Convert.ToDecimal(result);
+                        Console.WriteLine($"DEBUG: Retrieved BMI = {bmi:F2}");
+                        return bmi;
+                    }
+                    else
+                    {
+                        Console.WriteLine("DEBUG: No BMI found for UserID " + userId);
+                        return null;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"DEBUG: Error fetching BMI: {ex.Message}");
+                return null;
+            }
+        }
+    }
+
     private static void ShowUserMenu(DietPlanService dietPlanService, UserService userService, int userId)
     {
         bool keepRunning = true;
@@ -131,6 +173,18 @@ class Program
         {
             Console.Clear();
             Console.WriteLine("👤 User Dashboard");
+
+            decimal? bmi = GetUserBmi(userService, userId);
+            if (bmi.HasValue && bmi.Value > 0)
+            {
+                Console.WriteLine($"📏 Your Current BMI: {bmi.Value:F2}");
+            }
+            else
+            {
+                Console.WriteLine("📏 BMI: Not available yet");
+            }
+            Console.WriteLine("-----------------------------");
+
             Console.WriteLine("1️⃣ View Your Diet Plan");
             Console.WriteLine("2️⃣ Add Diet Plan");
             Console.WriteLine("3️⃣ Update Diet Plan");
@@ -139,9 +193,13 @@ class Program
             Console.WriteLine("6️⃣ View Water Intake History");
             Console.WriteLine("7️⃣ Log Weight Progress");
             Console.WriteLine("8️⃣ View Weight Progress");
-            Console.WriteLine("9 Log an Exercise");
-            Console.WriteLine("1️0 View Calories Burned from Exercise Today");
+            Console.WriteLine("9️⃣ Log an Exercise");
+            Console.WriteLine("10 View Calories Burned from Exercise Today");
             Console.WriteLine("11 View Your Health Summary");
+            Console.WriteLine("12 Set Fitness Goal");
+            Console.WriteLine("13 View Goal Progress");
+            Console.WriteLine("14 Log Sleep");
+            Console.WriteLine("15 View Sleep History");
             Console.WriteLine("0️⃣ Logout");
 
             Console.Write("Enter your choice: ");
@@ -149,55 +207,26 @@ class Program
 
             switch (action)
             {
-                case "1":
-                    dietPlanService.ViewDietPlan(userId);
-                    break;
-
-                case "2":
-                    AddDietPlan(dietPlanService, userService, userId);
-                    break;
-
-                case "3":
-                    UpdateDietPlan(dietPlanService, userId);
-                    break;
-
-                case "4":
-                    dietPlanService.DeleteDietPlan(userId);
-                    break;
-
-                case "5":
-                    LogWaterIntake(userService, userId);
-                    break;
-
-                case "6":
-                    userService.ViewWaterIntake(userId);
-                    break;
-
-                case "7":
-                    LogWeightProgress(userService, userId);
-                    break;
-
-                case "8":
-                    userService.ViewWeightProgress(userId);
-                    break;
-                case "9":
-                    LogExercise(userService, userId);
-                    break;
-                case "10":
-                    ViewExerciseCaloriesBurned(userService, userId);
-                    break;
-
-                case "11":
-                    ViewUserHealthSummary(userService, userId);
-                    break;
-               
-
+                case "1": dietPlanService.ViewDietPlan(userId); break;
+                case "2": AddDietPlan(dietPlanService, userService, userId); break;
+                case "3": UpdateDietPlan(dietPlanService, userId); break;
+                case "4": dietPlanService.DeleteDietPlan(userId); break;
+                case "5": LogWaterIntake(userService, userId); break;
+                case "6": userService.ViewWaterIntake(userId); break;
+                case "7": LogWeightProgress(userService, userId); break;
+                case "8": userService.ViewWeightProgress(userId); break;
+                case "9": LogExercise(userService, userId); break;
+                case "10": ViewExerciseCaloriesBurned(userService, userId); break;
+                case "11": userService.ViewUserHealthSummary(userId); break;
+                case "12": SetFitnessGoal(userService, userId); break;
+                case "13": userService.ViewGoalProgress(userId); break;
+                case "14": LogSleep(userService, userId); break;
+                case "15": userService.ViewSleepHistory(userId); break;
                 case "0":
                     keepRunning = false;
                     Console.WriteLine("👋 Logging out...");
                     Thread.Sleep(1000);
                     break;
-
                 default:
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("❌ Invalid choice.");
@@ -230,25 +259,20 @@ class Program
                 case "1":
                     userService.ViewAllUsers();
                     break;
-
                 case "2":
                     DeleteUser(userService);
                     break;
-
                 case "3":
                     UpdateUserRole(userService);
                     break;
-
                 case "4":
                     dietPlanService.ViewAllDietPlans();
                     break;
-
                 case "0":
                     keepRunning = false;
                     Console.WriteLine("👋 Logging out...");
                     Thread.Sleep(1000);
                     break;
-
                 default:
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("❌ Invalid choice.");
@@ -289,40 +313,40 @@ class Program
             return;
         }
 
-        // Select a meal from MealLibrary
-        int mealId = SelectMealFromLibrary(userService, dietCategory);
-        if (mealId == -1)
+        Console.WriteLine("Would you like to use a recommended meal? (yes/no): ");
+        string useRecommendation = Console.ReadLine()?.ToLower();
+        if (useRecommendation == "yes")
         {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("❌ No meal selected.");
-            Console.ResetColor();
-            return;
+            dietPlanService.AddDietPlan(userId, planType);
         }
-
-        // Retrieve meal details from MealLibrary
-        using (SqlConnection conn = new SqlConnection(userService.GetConnectionString()))
+        else
         {
-            conn.Open();
-            string query = "SELECT Calories, Proteins, Carbs, Fats FROM MealLibrary WHERE MealID = @MealID";
-
-            using (SqlCommand cmd = new SqlCommand(query, conn))
+            int mealId = SelectMealFromLibrary(userService, dietCategory);
+            if (mealId == -1)
             {
-                cmd.Parameters.AddWithValue("@MealID", mealId);
-                SqlDataReader reader = cmd.ExecuteReader();
-                if (reader.Read())
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("❌ No meal selected.");
+                Console.ResetColor();
+                return;
+            }
+
+            using (SqlConnection conn = new SqlConnection(userService.GetConnectionString()))
+            {
+                conn.Open();
+                string query = "SELECT Calories, Proteins, Carbs, Fats FROM MealLibrary WHERE MealID = @MealID";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    int calories = (int)reader["Calories"];
-                    decimal proteins = (decimal)reader["Proteins"];
-                    decimal carbs = (decimal)reader["Carbs"];
-                    decimal fats = (decimal)reader["Fats"];
-
-                    reader.Close();
-
-                    // Add the selected meal to the user's diet plan
-                    dietPlanService.AddDietPlan(userId, planType, mealId, calories, proteins, carbs, fats);
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine("✅ Diet Plan Created Successfully!");
-                    Console.ResetColor();
+                    cmd.Parameters.AddWithValue("@MealID", mealId);
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        int selectedCalories = (int)reader["Calories"];
+                        decimal selectedProteins = (decimal)reader["Proteins"];
+                        decimal selectedCarbs = (decimal)reader["Carbs"];
+                        decimal selectedFats = (decimal)reader["Fats"];
+                        reader.Close();
+                        dietPlanService.AddDietPlan(userId, planType, mealId, selectedCalories, selectedProteins, selectedCarbs, selectedFats);
+                    }
                 }
             }
         }
@@ -337,31 +361,32 @@ class Program
             Console.WriteLine($"🍽️ Select a meal from MealLibrary ({category}):");
             string query = "SELECT MealID, MealName FROM MealLibrary WHERE Category = @Category";
 
+            Dictionary<int, string> mealOptions = new Dictionary<int, string>();
+
             using (SqlCommand cmd = new SqlCommand(query, conn))
             {
                 cmd.Parameters.AddWithValue("@Category", category);
                 SqlDataReader reader = cmd.ExecuteReader();
-                Dictionary<int, string> mealOptions = new Dictionary<int, string>();
 
                 while (reader.Read())
                 {
                     int mealId = (int)reader["MealID"];
-                    string mealName = reader["MealName"].ToString();
+                    string mealName = reader["MealName"]?.ToString() ?? "Unnamed Meal";
                     Console.WriteLine($"{mealId} - {mealName}");
                     mealOptions.Add(mealId, mealName);
                 }
                 reader.Close();
+            }
 
-                if (mealOptions.Count == 0)
-                {
-                    Console.WriteLine("❌ No meals available for this category.");
-                    return -1;
-                }
+            if (mealOptions.Count == 0)
+            {
+                Console.WriteLine("❌ No meals available for this category.");
+                return -1;
             }
 
             Console.Write("Enter Meal ID to select: ");
             int selectedMealId;
-            if (int.TryParse(Console.ReadLine(), out selectedMealId))
+            if (int.TryParse(Console.ReadLine(), out selectedMealId) && mealOptions.ContainsKey(selectedMealId))
             {
                 return selectedMealId;
             }
@@ -370,7 +395,6 @@ class Program
             return -1;
         }
     }
-
 
     private static void UpdateDietPlan(DietPlanService dietPlanService, int userId)
     {
@@ -430,30 +454,31 @@ class Program
             conn.Open();
             string query = "SELECT ExerciseID, ExerciseName FROM ExerciseLibrary WHERE MuscleGroup = @MuscleGroup";
 
+            Dictionary<int, string> exerciseOptions = new Dictionary<int, string>();
+
             using (SqlCommand cmd = new SqlCommand(query, conn))
             {
                 cmd.Parameters.AddWithValue("@MuscleGroup", muscleGroup);
                 SqlDataReader reader = cmd.ExecuteReader();
-                Dictionary<int, string> exerciseOptions = new Dictionary<int, string>();
 
                 while (reader.Read())
                 {
                     int exerciseId = (int)reader["ExerciseID"];
-                    string exerciseName = reader["ExerciseName"].ToString();
+                    string exerciseName = reader["ExerciseName"]?.ToString() ?? "Unnamed Exercise";
                     Console.WriteLine($"{exerciseId} - {exerciseName}");
                     exerciseOptions.Add(exerciseId, exerciseName);
                 }
                 reader.Close();
+            }
 
-                if (exerciseOptions.Count == 0)
-                {
-                    Console.WriteLine("❌ No exercises available for this category.");
-                    return;
-                }
+            if (exerciseOptions.Count == 0)
+            {
+                Console.WriteLine("❌ No exercises available for this category.");
+                return;
             }
 
             Console.Write("Enter Exercise ID to log: ");
-            if (int.TryParse(Console.ReadLine(), out int selectedExerciseId))
+            if (int.TryParse(Console.ReadLine(), out int selectedExerciseId) && exerciseOptions.ContainsKey(selectedExerciseId))
             {
                 Console.Write("Enter duration in minutes: ");
                 if (int.TryParse(Console.ReadLine(), out int durationMinutes) && durationMinutes > 0)
@@ -471,16 +496,33 @@ class Program
             }
         }
     }
+
     private static void ViewExerciseCaloriesBurned(UserService userService, int userId)
     {
         Console.WriteLine("📊 Fetching today's exercise calories burned...");
         userService.ViewExerciseCaloriesBurned(userId);
     }
 
-    private static void ViewUserHealthSummary(UserService userService, int userId)
+    private static void SetFitnessGoal(UserService userService, int userId)
     {
-        Console.WriteLine("📊 Fetching your health summary...");
-        userService.ViewUserHealthSummary(userId);
+        Console.Write("Target Weight (kg): ");
+        decimal targetWeight = GetValidDecimalInput("Target Weight");
+        Console.Write("Target Calories (kcal/day): ");
+        int targetCalories = GetValidIntegerInput("Target Calories");
+        Console.Write("Goal Type (e.g., Weight Loss, Muscle Gain): ");
+        string goalType = GetNonEmptyInput("Goal Type");
+        Console.Write("Target Date (yyyy-MM-dd): ");
+        DateTime targetDate = DateTime.Parse(GetNonEmptyInput("Target Date"));
+        userService.SetGoal(userId, targetWeight, targetCalories, goalType, targetDate);
+    }
+
+    private static void LogSleep(UserService userService, int userId)
+    {
+        Console.Write("Enter sleep hours (e.g., 7.5): ");
+        decimal sleepHours = GetValidDecimalInput("Sleep Hours");
+        Console.Write("Enter sleep quality (e.g., Good, Fair, Poor): ");
+        string sleepQuality = GetNonEmptyInput("Sleep Quality");
+        userService.LogSleep(userId, sleepHours, sleepQuality);
     }
 
     private static void DeleteUser(UserService userService)
@@ -501,7 +543,6 @@ class Program
         userService.UpdateUserRole(email, newRole);
     }
 
-    // ✅ Helper methods for input validation
     private static string GetNonEmptyInput(string fieldName)
     {
         string input;

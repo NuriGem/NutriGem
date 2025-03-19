@@ -1,0 +1,6 @@
+CREATE TABLE SleepLogs (
+    SleepId INT PRIMARY KEY IDENTITY,
+    UserId INT FOREIGN KEY REFERENCES Users(UserId),
+    SleepHours DECIMAL(4, 1),
+    LogDate DATE,
+    SleepQuality VARCHAR(50)

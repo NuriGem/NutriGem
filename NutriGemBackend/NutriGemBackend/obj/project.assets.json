@@ -1920,19 +1920,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\mungo\\.nuget\\packages\\": {}
+    "C:\\Users\\youss\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\mungo\\OneDrive\\Desktop\\UNI\\NutriGem-main\\NutriGemBackend\\NutriGemBackend\\NutriGemBackend.csproj",
+      "projectUniqueName": "C:\\Users\\youss\\OneDrive - University of South Wales\\Desktop\\NutriGem\\NutriGem\\NutriGemBackend\\NutriGemBackend\\NutriGemBackend.csproj",
       "projectName": "NutriGemBackend",
-      "projectPath": "C:\\Users\\mungo\\OneDrive\\Desktop\\UNI\\NutriGem-main\\NutriGemBackend\\NutriGemBackend\\NutriGemBackend.csproj",
-      "packagesPath": "C:\\Users\\mungo\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\mungo\\OneDrive\\Desktop\\UNI\\NutriGem-main\\NutriGemBackend\\NutriGemBackend\\obj\\",
+      "projectPath": "C:\\Users\\youss\\OneDrive - University of South Wales\\Desktop\\NutriGem\\NutriGem\\NutriGemBackend\\NutriGemBackend\\NutriGemBackend.csproj",
+      "packagesPath": "C:\\Users\\youss\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\youss\\OneDrive - University of South Wales\\Desktop\\NutriGem\\NutriGem\\NutriGemBackend\\NutriGemBackend\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\mungo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\youss\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -1940,6 +1945,7 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -1957,7 +1963,8 @@
         "enableAudit": "true",
         "auditLevel": "low",
         "auditMode": "direct"
-      }
+      },
+      "SdkAnalysisLevel": "9.0.200"
     },
     "frameworks": {
       "net8.0": {
@@ -1996,7 +2003,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.406/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

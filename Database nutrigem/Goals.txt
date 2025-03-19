@@ -1,0 +1,9 @@
+CREATE TABLE Goals (
+    GoalId INT PRIMARY KEY IDENTITY,
+    UserId INT FOREIGN KEY REFERENCES Users(UserId),
+    TargetWeight DECIMAL(5, 2),
+    TargetCalories INT,
+    GoalType VARCHAR(50),
+    TargetDate DATE,
+    CreatedAt DATETIME DEFAULT GETDATE()
+);

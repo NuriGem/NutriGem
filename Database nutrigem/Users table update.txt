@@ -1,0 +1,4 @@
+
+ALTER TABLE Users ADD ActivityLevel VARCHAR(20) DEFAULT 'Sedentary';
+ALTER TABLE Users ADD BMI DECIMAL(5, 2);
+

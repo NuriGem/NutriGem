@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("NutriGemBackend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7caec7692f0745bdb7b47836aac145980c07f2a3")]
 [assembly: System.Reflection.AssemblyProductAttribute("NutriGemBackend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("NutriGemBackend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
