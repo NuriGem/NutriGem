@@ -4,3 +4,4 @@ CREATE TABLE SleepLogs (
     SleepHours DECIMAL(4, 1),
     LogDate DATE,
     SleepQuality VARCHAR(50)
+);
