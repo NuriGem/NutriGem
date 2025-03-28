@@ -1,0 +1,115 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Dashboard - NutriGem</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Welcome to the User Dashboard</h1>
+    <div id="user-info"></div>
+
+    <h2>Add Diet Plan</h2>
+    <form id="dietplan-form">
+        <div class="form-group">
+            <input id="userId" type="number" placeholder="User ID" required readonly>
+        </div>
+        <div class="form-group">
+            <select id="planType">
+                <option value="Weight Loss">Weight Loss</option>
+                <option value="Muscle Gain">Muscle Gain</option>
+            </select>
+        </div>
+        <button type="submit">Add Diet Plan</button>
+    </form>
+    <p id="dietplan-result"></p>
+    <button id="view-dietplan">View Diet Plan</button>
+    <p id="view-dietplan-result"></p>
+
+    <h2>Log Water Intake</h2>
+    <form id="waterintake-form">
+        <div class="form-group">
+            <input id="waterIntake" type="number" placeholder="Water Intake (ml)" required>
+        </div>
+        <button type="submit">Log Water Intake</button>
+    </form>
+    <p id="waterintake-result"></p>
+
+    <button id="logout">Logout</button>
+
+    <script>
+        const BASE_URL = window.location.origin;
+        const userId = localStorage.getItem('userId');
+        const role = localStorage.getItem('role');
+
+        if (!userId || role !== "User") {
+            window.location.href = "index.html";
+        } else {
+            document.getElementById('userId').value = userId;
+            document.getElementById('user-info').innerText = `User ID: ${userId}`;
+        }
+
+        document.getElementById('dietplan-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = {
+                userId: parseInt(document.getElementById('userId').value),
+                planType: document.getElementById('planType').value
+            };
+
+            try {
+                const response = await fetch(`${BASE_URL}/api/dietplan`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.text();
+                document.getElementById('dietplan-result').innerText = response.ok ? result : `Error: ${result}`;
+            } catch (error) {
+                document.getElementById('dietplan-result').innerText = `Error: ${error.message}`;
+            }
+        });
+
+        document.getElementById('view-dietplan').addEventListener('click', async () => {
+            const userId = parseInt(document.getElementById('userId').value);
+            try {
+                const response = await fetch(`${BASE_URL}/api/dietplan/${userId}`);
+                if (response.ok) {
+                    const dietPlan = await response.json();
+                    document.getElementById('view-dietplan-result').innerText =
+                        `Plan: ${dietPlan.planType}, Calories: ${dietPlan.caloriesPerDay}, Meal: ${dietPlan.mealName}`;
+                } else {
+                    document.getElementById('view-dietplan-result').innerText = 'No diet plan found';
+                }
+            } catch (error) {
+                document.getElementById('view-dietplan-result').innerText = `Error: ${error.message}`;
+            }
+        });
+
+        document.getElementById('waterintake-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = {
+                userId: parseInt(userId),
+                waterIntake: parseInt(document.getElementById('waterIntake').value)
+            };
+
+            try {
+                const response = await fetch(`${BASE_URL}/api/waterintake`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.text();
+                document.getElementById('waterintake-result').innerText = response.ok ? result : `Error: ${result}`;
+            } catch (error) {
+                document.getElementById('waterintake-result').innerText = `Error: ${error.message}`;
+            }
+        });
+
+        document.getElementById('logout').addEventListener('click', () => {
+            localStorage.removeItem('userId');
+            localStorage.removeItem('role');
+            window.location.href = "index.html";
+        });
+    </script>
+</body>
+</html>

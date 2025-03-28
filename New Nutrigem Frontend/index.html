@@ -1,0 +1,155 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NutriGem</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>NutriGem</h1>
+    <h2>Register</h2>
+    <form id="registration-form">
+        <div class="form-group">
+            <input id="fullName" placeholder="Full Name" required />
+        </div>
+        <div class="form-group">
+            <input id="regEmail" type="email" placeholder="Email" required />
+        </div>
+        <div class="form-group">
+            <input id="regPassword" type="password" placeholder="Password (min 8 chars)" required />
+        </div>
+        <div class="form-group">
+            <input id="age" type="number" placeholder="Age" required />
+        </div>
+        <div class="form-group">
+            <input id="height" type="number" step="0.1" placeholder="Height (cm)" required />
+        </div>
+        <div class="form-group">
+            <input id="weight" type="number" step="0.1" placeholder="Weight (kg)" required />
+        </div>
+        <div class="form-group">
+            <input id="healthConditions" placeholder="Health Conditions (optional)" />
+        </div>
+        <div class="form-group">
+            <select id="userRole">
+                <option value="User">User</option>
+                <option value="Admin">Admin</option>
+            </select>
+        </div>
+        <button type="submit">Register</button>
+    </form>
+    <p id="registration-result"></p>
+
+    <h2>Login</h2>
+    <form id="login-form">
+        <div class="form-group">
+            <input id="loginEmail" type="email" placeholder="Email" required />
+        </div>
+        <div class="form-group">
+            <input id="loginPassword" type="password" placeholder="Password" required />
+        </div>
+        <button type="submit">Login</button>
+    </form>
+    <p id="login-result"></p>
+
+    <script>
+        const BASE_URL = window.location.origin;
+        const registrationResult = document.getElementById('registration-result');
+        const loginResult = document.getElementById('login-result');
+
+        // Registration form submission
+        document.getElementById('registration-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            console.log('Register button clicked'); // Debug log
+
+            // Collect form data
+            const data = {
+                fullName: document.getElementById('fullName').value,
+                email: document.getElementById('regEmail').value,
+                password: document.getElementById('regPassword').value,
+                age: parseInt(document.getElementById('age').value),
+                height: parseFloat(document.getElementById('height').value),
+                weight: parseFloat(document.getElementById('weight').value),
+                healthConditions: document.getElementById('healthConditions').value || "None",
+                role: document.getElementById('userRole').value
+            };
+
+            // Basic validation
+            if (data.password.length < 8) {
+                registrationResult.innerText = 'Password must be at least 8 characters';
+                return;
+            }
+            if (!data.email.includes('@') || !data.email.includes('.')) {
+                registrationResult.innerText = 'Invalid email address';
+                return;
+            }
+            if (data.age <= 0 || data.height <= 0 || data.weight <= 0) {
+                registrationResult.innerText = 'Age, height, and weight must be positive numbers';
+                return;
+            }
+
+            console.log('Sending registration data:', data); // Debug log
+
+            try {
+                const response = await fetch(`${BASE_URL}/api/user/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                console.log('Registration response status:', response.status); // Debug log
+
+                const result = await response.text();
+                if (response.ok) {
+                    registrationResult.innerText = result; // Should be "User registered successfully"
+                } else {
+                    registrationResult.innerText = `Registration failed: ${result || response.statusText}`;
+                }
+            } catch (error) {
+                console.error('Registration error:', error); // Debug log
+                registrationResult.innerText = `Error: ${error.message}`;
+            }
+        });
+
+        // Login form submission
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            console.log('Login button clicked'); // Debug log
+
+            const data = {
+                email: document.getElementById('loginEmail').value,
+                password: document.getElementById('loginPassword').value
+            };
+
+            console.log('Sending login data:', data); // Debug log
+
+            try {
+                const response = await fetch(`${BASE_URL}/api/user/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                console.log('Login response status:', response.status); // Debug log
+
+                if (response.ok) {
+                    const result = await response.json();
+                    localStorage.setItem('userId', result.UserId);
+                    localStorage.setItem('role', result.Role);
+                    loginResult.innerText = `Login successful! Welcome, ${result.FullName} (${result.Role})`;
+                    setTimeout(() => {
+                        window.location.href = result.Role === "Admin" ? "adminDashboard.html" : "userDashboard.html";
+                    }, 1000);
+                } else {
+                    const errorText = await response.text();
+                    loginResult.innerText = `Login failed: ${errorText || 'Invalid credentials'}`;
+                }
+            } catch (error) {
+                console.error('Login error:', error); // Debug log
+                loginResult.innerText = `Error: ${error.message}`;
+            }
+        });
+    </script>
+</body>
+</html>

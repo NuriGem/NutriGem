@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard - NutriGem</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Welcome to the Admin Dashboard</h1>
+    <p id="admin-info"></p>
+    <button id="logout">Logout</button>
+
+    <script>
+        const userId = localStorage.getItem('userId');
+        const role = localStorage.getItem('role');
+
+        if (!userId || role !== "Admin") {
+            window.location.href = "index.html";
+        } else {
+            document.getElementById('admin-info').innerText = `Admin ID: ${userId}`;
+        }
+
+        document.getElementById('logout').addEventListener('click', () => {
+            localStorage.removeItem('userId');
+            localStorage.removeItem('role');
+            window.location.href = "index.html";
+        });
+    </script>
+</body>
+</html>
